@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 
+import emojies from '../../constants/emojies';
 import ListStateless from './ListStateless';
+import Card from '../Card';
 
 
 const getRandomEmojiIndex = () => Math.round(Math.random() * 10);
@@ -14,6 +16,16 @@ function makeCardsList(count = 2) {
 
     return cards;
 }
+
+const checkAnswer = (selectedValue, cards) => cards.every(({ value }) => selectedValue === value);
+
+const hideTurnedCards = cards => cards
+    .map(card => ({ ...card, hidden: card.isTurned || card.hidden }))
+    .map(card => ({ ...card, isTurned: false }));
+
+const turnTurnedCard = cards => cards.map(({ isTurned, ...card }) => ({
+    ...card, isTurned: isTurned ? !isTurned : isTurned
+}));
 
 class List extends Component {
     constructor(...props) {
@@ -39,16 +51,17 @@ class List extends Component {
             items[index].isTurned = !items[index].isTurned;
 
             if (isGame) {
-                if (getTurnedCards(items).every(({ value }) => items[index].value === value)) {
-                    getTurnedCards(items).forEach(item => item.hidden = true);
-                } else {
-                    items.forEach(item => item.isTurned = false);
-                }
+                const isCorrect = checkAnswer(items[index].value, getTurnedCards(items));
+                const resultCards = isCorrect ? hideTurnedCards(items) : turnTurnedCard(items);
 
-                return { items, isGame: false, flipedCount: getTurnedCards().length };
+                return {
+                    items: resultCards,
+                    isGame: false,
+                    flipedCount: getTurnedCards(resultCards).length
+                };
             } else {
                 const hasDuble = getTurnedCards(items).reduce(
-                    (acc, item, i) => acc || (item.index !== index && item.value === items[index].value),
+                    (acc, item) => acc || (item.index !== index && item.value === items[index].value),
                     false
                 );
 
@@ -58,14 +71,17 @@ class List extends Component {
                     items[index].isTurned = true;
                 }
 
-                return { items, isGame: hasDuble, flipedCount: getTurnedCards(items).length }
+                return {
+                    items,
+                    isGame: hasDuble,
+                    flipedCount: getTurnedCards(items).length
+                }
             }
 
         })
     }
 
-
-    renderItemCard({ index, value, ...props }) {
+    renderItemCard = ({ index, value, ...props }) => {
         return (<Card
             key={index}
             emoji={emojies[value]}
