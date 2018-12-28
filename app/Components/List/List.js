@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import emojies from '../../constants/emojies';
-import ListStateless from './ListStateless';
+import ListStateless from './List.view';
 import Card from '../Card';
 
 

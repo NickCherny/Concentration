@@ -1,23 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableHighlight, Alert } from 'react-native';
-
-
-const styles = {
-    itemView: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 60,
-        height: 60,
-        backgroundColor: '#FFC33A',
-        borderWidth: 1,
-        borderColor: '#8A621B',
-        marginTop: 10,
-        marginRight: 10,
-        marginLeft: 10,
-        marginBottom: 10,
-        borderRadius: 3
-    },
-}
+import { Text, View, TouchableHighlight } from 'react-native';
+import styles from './Card.styles';
 
 class CardStateless extends Component {
     constructor(...props) {

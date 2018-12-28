@@ -1,3 +1,3 @@
-import CardStateless from './CardStateless';
+import CardStateless from './Card.view';
 
 export default CardStateless;
